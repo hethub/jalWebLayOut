@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 
-class MySlider extends StatefulWidget {
-  const MySlider({
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:web_test_app/lower_indecator.dart';
+
+class MobSlider extends StatefulWidget {
+  const MobSlider({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MySlider> createState() => _MySliderState();
+  State<MobSlider> createState() => _MySliderState();
 }
 
-class _MySliderState extends State<MySlider> {
+class _MySliderState extends State<MobSlider> {
   late PageController _pageController;
 
-  int curr = 0;
+  int currentPage = 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   Row _circleIndecator(BuildContext context, int n, double ht) {
@@ -58,11 +67,14 @@ class _MySliderState extends State<MySlider> {
           Expanded(
             child: PageView(
               controller: _pageController,
-              scrollDirection: Axis.horizontal,
+              scrollDirection: kIsWeb ? Axis.vertical : Axis.horizontal,
+
+              // scrollDirection: (ht > 600) ? Axis.horizontal : Axis.vertical,
+              // scrollDirection: Axis.horizontal, // not working properly
               physics: const BouncingScrollPhysics(),
               onPageChanged: (value) {
                 setState(() {
-                  curr = value;
+                  currentPage = value;
                 });
               },
               children: [
@@ -133,7 +145,7 @@ class _MySliderState extends State<MySlider> {
               ],
             ),
           ),
-          _circleIndecator(context, curr, ht)
+          _circleIndecator(context, currentPage, ht)
         ],
       );
     });

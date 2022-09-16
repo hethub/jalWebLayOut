@@ -1,10 +1,10 @@
 // main
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 
 import 'mobSider.dart';
 import 'my_layoutbuilder.dart';
+import 'web_slider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -27,111 +27,21 @@ class MyPageView extends StatefulWidget {
 }
 
 class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
-  late PageController _pageController;
+  // late PageController _pageController;
   late TabController _tabController;
   int curr = 0;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
+    // _pageController = PageController();
     _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    // _pageController.dispose();
     super.dispose();
-  }
-
-  Row _circleIndecator(BuildContext context, int i) {
-    if (i == 0) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            height: 10,
-            width: 20,
-            decoration: const BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: Colors.green,
-            ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Container(
-            height: 10,
-            width: 12,
-            decoration: const BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 50)
-        ],
-      );
-    }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 10,
-          width: 12,
-          decoration: const BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Container(
-          height: 10,
-          width: 20,
-          decoration: const BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            color: Colors.green,
-          ),
-        ),
-        const SizedBox(height: 50)
-      ],
-    );
-  }
-
-//=================================================================================================
-//=================================================================================================
-//=================================================================================================
-  Widget pageView(BuildContext context) {
-    return PageView(
-      onPageChanged: (value) {
-        // print(_pageController.initialPage);
-        setState(() {
-          curr = value;
-        });
-      },
-      controller: _pageController,
-      scrollDirection: Axis.vertical,
-      physics: const BouncingScrollPhysics(),
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Expanded(child: MyPage()),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Expanded(child: MyPage()),
-          ],
-        ),
-      ],
-    );
   }
 
   // This is use for bottom navigation bar
@@ -144,44 +54,19 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
 
 // int _change=1;
 // static const List<Widget> screens
-  static List<Widget> screens = [
-    const MySlider(),
-    ListView.builder(
-      controller: ScrollController(),
-      itemCount: 8,
-      itemBuilder: (context, index) => Container(
-          height: 300,
-          color: Colors.green,
-          margin: const EdgeInsets.only(top: 10),
-          child: const Center(child: Text('7 Day'))),
-    ),
-    ListView.builder(
-      controller: ScrollController(),
-      itemCount: 8,
-      itemBuilder: (context, index) => Container(
-          height: 300,
-          color: Colors.green,
-          margin: const EdgeInsets.only(top: 10),
-          child: const Center(child: Text('30 Days'))),
-    ),
-    ListView.builder(
-      controller: ScrollController(),
-      itemCount: 8,
-      itemBuilder: (context, index) => Container(
-          height: 300,
-          color: Colors.green,
-          margin: const EdgeInsets.only(top: 10),
-          child: const Center(child: Text('1 Year'))),
-    ),
-    ListView.builder(
-      controller: ScrollController(),
-      itemCount: 8,
-      itemBuilder: (context, index) => Container(
-          height: 300,
-          color: Colors.green,
-          margin: const EdgeInsets.only(top: 10),
-          child: const Center(child: Text('5 year'))),
-    ),
+  static const List<Widget> mobileScreens = [
+    MobSlider(),
+    MobSlider(),
+    MobSlider(),
+    MobSlider(),
+    MobSlider(),
+  ];
+  static const List<Widget> webScreens = [
+    WebSlider(),
+    WebSlider(),
+    WebSlider(),
+    WebSlider(),
+    WebSlider(),
   ];
 
   @override
@@ -218,19 +103,12 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
               ],
             ),
           ),
-          bottomNavigationBar: _circleIndecator(context, curr),
           body: TabBarView(
             controller: _tabController,
-            children: <Widget>[
-              pageView(context),
-              pageView(context),
-              pageView(context),
-              pageView(context),
-              pageView(context),
-            ],
+            children: webScreens,
           ),
         );
-      } else if (constraints.maxHeight < 100) {
+      } else if (constraints.maxHeight < 150) {
         return const SizedBox(
           height: 0,
         );
@@ -241,7 +119,7 @@ class _MyPageViewState extends State<MyPageView> with TickerProviderStateMixin {
         ),
         body: IndexedStack(
           index: _selectedIndex,
-          children: screens,
+          children: mobileScreens,
         ),
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.grey,
